@@ -1,0 +1,61 @@
+// Assuming you have a UserPreferences class or object
+class UserPreferences {
+  constructor(preferences) {
+    this.preferences = preferences;
+  }
+
+  // Validation function for user preferences
+  validate() {
+    // Example validation rules
+    const validationRules = [
+      {
+        condition: this.preferences.emailPreferences && !isEmailValid(this.preferences.email),
+        message: "Invalid email address for email preferences."
+      },
+      {
+        condition: this.preferences.notificationPreferences && !isPhoneValid(this.preferences.phoneNumber),
+        message: "Invalid phone number for notification preferences."
+      },
+      // Add more rules as needed
+    ];
+
+    // Check each rule
+    const validationErrors = validationRules
+      .filter(rule => rule.condition)
+      .map(rule => rule.message);
+
+    // Return validation result
+    return {
+      isValid: validationErrors.length === 0,
+      errors: validationErrors
+    };
+  }
+}
+
+// Example usage
+const userPreferencesData = {
+  emailPreferences: true,
+  email: "invalidEmail", // validation error
+  notificationPreferences: true,
+  phoneNumber: "12345678" // validation error, number < 10
+};
+
+const userPreferences = new UserPreferences(userPreferencesData);
+const validationResults = userPreferences.validate();
+
+if (validationResults.isValid) {
+  // Save user preferences
+  console.log("User preferences are valid!");
+} else {
+  console.error("Validation errors:", validationResults.errors);
+}
+
+function isEmailValid(email) {
+  // For simplicity, this is just a basic example
+  return /\S+@\S+\.\S+/.test(email);
+}
+
+function isPhoneValid(phoneNumber) {
+  // For simplicity, this is just a basic example
+  return /^\d{10}$/.test(phoneNumber);
+}
